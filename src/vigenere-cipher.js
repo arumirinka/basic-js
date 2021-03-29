@@ -1,41 +1,51 @@
 class VigenereCipheringMachine {
-  constructor (direction) {
+  constructor (direction = true) {
     this.direction = direction;
     this.alphabet = 'abcdefghijklmnopqrstuvwxyz';
   }
 
   encrypt(message, key) {
-    if (!message || !key) throw new Error('Enter required parameters!');
-    let res = [];
-    let messageLow = message.toLowerCase();
-    let keyLow = key.toLowerCase();
+    if (!message || !key) throw new Error('Enter required parameters!');  
+    const messageLow = message.toLowerCase();
+    const keyLow = key.toLowerCase();
+    let res = '';
     let j = 0;
-    for (let i = 0; i < messageLow.length; i++) {
-      if (this.alphabet.indexOf(messageLow.charAt(i)) !== -1) {
-        res.push(this.alphabet.charAt((this.alphabet.indexOf(messageLow.charAt(i)) + this.alphabet.indexOf(keyLow.charAt(j % key.length))) % this.alphabet.length));
+
+    messageLow.split('').map((el) => {
+      if (this.alphabet.includes(el)) {
+        const tmpNum = this.alphabet.indexOf(el) + this.alphabet.indexOf(keyLow.charAt(j % key.length));
+        res += this.alphabet.charAt(tmpNum % this.alphabet.length).toUpperCase();
         j++;
       } else {
-        res.push(messageLow.charAt(i));
+        res += el;
       }
-    }
-    return this.direction !== 'false' ? res.join('').toUpperCase() : res.reverse().join('').toUpperCase();
+    });
+
+    if (!this.direction) return res.split('').reverse().join('');
+
+    return res;
   }
 
   decrypt(message, key) {
-    if (!message || !key) throw new Error('Enter required parameters!');
-    let res = [];
-    let messageLow = message.toLowerCase();
-    let keyLow = key.toLowerCase();
+    if (!message || !key) throw new Error('Enter required parameters!');  
+    const messageLow = message.toLowerCase();
+    const keyLow = key.toLowerCase();
+    let res = '';
     let j = 0;
-    for (let i = 0; i < messageLow.length; i++) {
-      if (this.alphabet.indexOf(messageLow.charAt(i)) !== -1) {
-        res.push(this.alphabet.charAt((this.alphabet.indexOf(messageLow.charAt(i)) + this.alphabet.length - this.alphabet.indexOf(keyLow.charAt(j % key.length))) % this.alphabet.length));
+
+    messageLow.split('').map((el) => {
+      if (this.alphabet.includes(el)) {
+        const tmpNum = this.alphabet.length + this.alphabet.indexOf(el) - this.alphabet.indexOf(keyLow.charAt(j % key.length));
+        res += this.alphabet.charAt(tmpNum % this.alphabet.length).toUpperCase();
         j++;
       } else {
-        res.push(messageLow.charAt(i));
+        res += el;
       }
-    }
-    return this.direction !== 'false' ? res.join('').toUpperCase() : res.reverse().join('').toUpperCase();
+    });
+
+    if (!this.direction) return res.split('').reverse().join('');
+
+    return res;
   }
 }
 
